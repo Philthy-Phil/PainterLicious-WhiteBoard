@@ -1,0 +1,16 @@
+<div class="line-amplifier">
+  <input
+    type="range"
+    id="thickness"
+    name="thickness"
+    min="5"
+    max="50"
+    step="1"
+    value="{{ thickness }}"
+    [(ngModel)]="thickness"
+    (change)="setThickness()"
+  />
+  <label for="thickness">
+      {{ thickness }} px
+  </label>
+</div>

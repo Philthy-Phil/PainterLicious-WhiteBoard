@@ -1,0 +1,17 @@
+@use "../../../styles.scss" as *;
+
+.line-amplifier {
+  position: fixed;
+  bottom: 0;
+  padding: $spacing;
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end;
+
+  input[type="range"] {
+    width: fit-content;
+  }
+  label {
+    padding: 0 ($spacing / 2);
+  }
+}

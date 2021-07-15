@@ -1,0 +1,8 @@
+<div class="clr-palette">
+        <div
+            *ngFor="let clr of clrPaletteList"
+            class="clr-card"
+            [ngStyle]="{'background-color': clr.clrDef}"
+            (click)="onClickChangeColor(clr.clrDef)">
+        </div>
+</div>

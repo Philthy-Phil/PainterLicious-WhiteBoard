@@ -1,0 +1,69 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap");
+
+// color-settings
+$clr-primary-100: hsl(210, 100%, 61%);
+$clr-mono: black;
+
+$clr-primary-100: hsl(210, 100%, 81%);
+$clr-primary-200: hsl(210, 100%, 70%);
+$clr-primary-300: hsl(210, 100%, 60%);
+$clr-primary-400: hsl(210, 100%, 50%);
+$clr-primary-500: hsl(210, 100%, 40%);
+
+$clr-mono-100: hsl(0, 0%, 100%);
+$clr-mono-200: hsl(0, 0%, 75%);
+$clr-mono-300: hsl(0, 0%, 50%);
+$clr-mono-400: hsl(0, 0%, 25%);
+$clr-mono-500: hsl(0, 0%, 0%);
+
+
+// font-settings
+$ff-1: "Lora", serif;
+$ff-1-b: "bolder";
+$ff-1-lh: "$spacing * 1.5";
+
+// spacing-settings
+$spacing: 1rem;
+
+* {
+  box-sizing: border-box;
+  font-family: $ff-1;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background-color: $clr-primary-300;
+  color: $clr-mono-100;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+// canvas {
+//   cursor: url("assets/Pen-5-icon.png"), auto;	
+// }

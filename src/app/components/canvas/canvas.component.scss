@@ -1,0 +1,15 @@
+@use "../../../styles.scss" as *;
+
+.board {
+  border: inset $spacing / 2 black;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  canvas {
+    // background: orange;
+    width: 100%;
+    height: 100%;
+  }
+}
