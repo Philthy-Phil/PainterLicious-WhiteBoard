@@ -1,32 +1,33 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable, ElementRef, OnInit } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class DrawingService implements OnInit {
   clrPaletteList: any[] = [
-    { clrName: 'white', clrDef: '#FFFFFF' },
-    { clrName: 'black', clrDef: '#000000' },
-    { clrName: 'lightergrey', clrDef: '#d3d3d3d3' },
-    { clrName: 'lightgrey', clrDef: '#7f7f7f' },
-    { clrName: 'red', clrDef: '#ff0000' },
-    { clrName: 'lightred', clrDef: '#fdafc9' },
-    { clrName: 'orange', clrDef: '#ffa800' },
-    { clrName: 'lightorange', clrDef: '#ffc90d' },
-    { clrName: 'yellow', clrDef: '#ffff00' },
-    { clrName: 'lightyellow', clrDef: '#efe3af' },
-    { clrName: 'green', clrDef: '#23b14d' },
-    { clrName: 'lightgreen', clrDef: '#b6e519' },
-    { clrName: 'skyblue', clrDef: '#00a2ed' },
-    { clrName: 'lightskyblue', clrDef: '#9ad9ea' },
-    { clrName: 'blue', clrDef: '#3f47cc' },
-    { clrName: 'lightblue', clrDef: '#7092bf' },
-    { clrName: 'violet', clrDef: '#a24a9e' },
-    { clrName: 'lightviolet', clrDef: '#c7bfe6' },
+    { clrName: "white", clrDef: "#FFFFFF" },
+    { clrName: "black", clrDef: "#000000" },
+    { clrName: "lightergrey", clrDef: "#d3d3d3d3" },
+    { clrName: "lightgrey", clrDef: "#7f7f7f" },
+    { clrName: "red", clrDef: "#ff0000" },
+    { clrName: "lightred", clrDef: "#fdafc9" },
+    { clrName: "orange", clrDef: "#ffa800" },
+    { clrName: "lightorange", clrDef: "#ffc90d" },
+    { clrName: "yellow", clrDef: "#ffff00" },
+    { clrName: "lightyellow", clrDef: "#efe3af" },
+    { clrName: "green", clrDef: "#23b14d" },
+    { clrName: "lightgreen", clrDef: "#b6e519" },
+    { clrName: "skyblue", clrDef: "#00a2ed" },
+    { clrName: "lightskyblue", clrDef: "#9ad9ea" },
+    { clrName: "blue", clrDef: "#3f47cc" },
+    { clrName: "lightblue", clrDef: "#7092bf" },
+    { clrName: "violet", clrDef: "#a24a9e" },
+    { clrName: "lightviolet", clrDef: "#c7bfe6" },
   ];
 
   drawingStatus: boolean = false;
-  selectedColor: string = '#000000';
+  selectedColor: string = "#000000";
   selectedSize: number = 10;
 
   canvasRef: ElementRef<HTMLCanvasElement> | any;
@@ -43,7 +44,7 @@ export class DrawingService implements OnInit {
   selectColor(color: string): void {
     this.selectedColor = color;
 
-    if (color !== '#FFFFFF') {
+    if (color !== "#FFFFFF") {
       console.log(
         `%c selectedColor => ${this.selectedColor}`,
         `background: ${color};color: white`
@@ -57,46 +58,50 @@ export class DrawingService implements OnInit {
   }
 
   windowResize(): void {
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       this.canvasRef.nativeElement.width = window.innerWidth;
       this.canvasRef.nativeElement.height = window.innerHeight;
 
+
+      this.drawingPath(event);
       for (let i = 0; i < this.drawingArray.length; i++) {
-        this.ctx.fillStyle = this.drawingArray[i].clr;
         this.ctx.beginPath();
-        this.ctx.arc(
-          this.drawingArray[i].x,
-          this.drawingArray[i].y,
-          this.drawingArray[i].size,
-          0,
-          Math.PI * 2
-        );
-        this.ctx.fill();
+        this.ctx.lineTo(this.drawingArray[i].x, this.drawingArray[i].y);
+        this.ctx.strokeStyle = this.drawingArray[i].clr;
+        this.ctx.lineWidth = this.drawingArray[i].size;
+        this.ctx.lineCap = "round";
+        this.ctx.lineJoin = "round";
+        this.ctx.stroke();
       }
     });
   }
 
-  drawCircle() {
+
+  drawingPath(event: any) {
     if (!this.drawingStatus) {
       return;
     }
-    this.ctx.fillStyle = this.selectedColor;
-    this.ctx.beginPath();
-    this.ctx.arc(this.mouse.x, this.mouse.y, this.selectedSize, 0, Math.PI * 2);
-    this.ctx.fill();
+    this.ctx.lineTo(this.mouse.x, this.mouse.y);
+    this.ctx.strokeStyle = this.selectedColor;
+    this.ctx.lineWidth = this.selectedSize;
+    this.ctx.lineCap = "round";
+    this.ctx.lineJoin = "round";
+    this.ctx.stroke();
   }
 
   startDrawing(event: any): void {
     this.drawingStatus = true;
+    this.ctx.beginPath();
   }
 
   stopDrawing(event: any): void {
     this.drawingStatus = false;
+    this.ctx.save();
   }
 
   /**
    *
-   * @returns different variables (getters & setters)
+   * @returns different variables & methods (getters & setters)
    */
 
   getSelectedColor(): string {
@@ -108,18 +113,18 @@ export class DrawingService implements OnInit {
   }
 
   setMouse(event: any): void {
+    if (!this.drawingStatus) {
+      return;
+    }
     this.mouse.x = event.x;
     this.mouse.y = event.y;
     // console.log("mouse", this.mouse);
 
-    if (!this.drawingStatus) {
-      return;
-    }
-    this.drawingArray.push({ 
-      x: this.mouse.x, 
-      y: this.mouse.y, 
-      clr: this.selectedColor, 
-      size: this.selectedSize
+    this.drawingArray.push({
+      x: this.mouse.x,
+      y: this.mouse.y,
+      clr: this.selectedColor,
+      size: this.selectedSize,
     });
   }
 

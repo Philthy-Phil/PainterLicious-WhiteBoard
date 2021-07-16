@@ -16,25 +16,28 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.ctx = this.canvasRef.nativeElement.getContext('2d');
-    
+        
     this.canvasRef.nativeElement.width = window.innerWidth;
     this.canvasRef.nativeElement.height = window.innerHeight;
     
     this.drawingService.windowResize();
-
+    
     this.drawingService.setCtx(this.ctx);
     this.drawingService.setCanvasRef(this.canvasRef);
     
   }
+
   
   onClick(event: any): void {
+    this.startDrawing(event);
     this.drawingService.setMouse(event);
-    this.drawingService.drawCircle();
+    this.drawingService.drawingPath(event);
+    this.stopDrawing(event);
   }
 
   drawing(event: any): void {
     this.drawingService.setMouse(event);
-    this.drawingService.drawCircle();
+    this.drawingService.drawingPath(event);
   }
   
   startDrawing(event: any): void {

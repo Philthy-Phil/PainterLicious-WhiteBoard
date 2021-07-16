@@ -68,7 +68,11 @@
       }
     }
     .github {
+      margin-top: $spacing;
+    }
+    .download {
       margin-top: auto;
+      margin-bottom: 0;
     }
   }
 }
