@@ -1,7 +1,17 @@
 @use "../../../../styles.scss" as *;
 
 .PNF {
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
     height: 100%;
+    a {
+        text-decoration: none;
+        color: $clr-primary-300;
+        &:hover {
+            text-decoration: underline;
+            color: $clr-mono-500;
+        }
+    }
 }
