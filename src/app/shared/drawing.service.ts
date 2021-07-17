@@ -1,5 +1,5 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Injectable, ElementRef, OnInit } from '@angular/core';
+import { Injectable, ElementRef, OnInit } from "@angular/core";
+import { Figure } from "./Figure.model";
 
 @Injectable({
   providedIn: "root",
@@ -35,7 +35,11 @@ export class DrawingService implements OnInit {
 
   mouse: any = { x: undefined, y: undefined };
 
-  drawingArray: any[] = [];
+  // collection of all figures
+  figures: Figure[] = [];
+
+  // actual draw
+  currentFigure: Figure = new Figure();
 
   constructor() {}
 
@@ -62,22 +66,37 @@ export class DrawingService implements OnInit {
       this.canvasRef.nativeElement.width = window.innerWidth;
       this.canvasRef.nativeElement.height = window.innerHeight;
 
+      this.drawingPath();
 
-      this.drawingPath(event);
-      for (let i = 0; i < this.drawingArray.length; i++) {
+      this.ctx.lineCap = "round";
+      this.ctx.lineJoin = "round";
+      
+      this.figures.forEach((figure) => {
+
         this.ctx.beginPath();
-        this.ctx.lineTo(this.drawingArray[i].x, this.drawingArray[i].y);
-        this.ctx.strokeStyle = this.drawingArray[i].clr;
-        this.ctx.lineWidth = this.drawingArray[i].size;
-        this.ctx.lineCap = "round";
-        this.ctx.lineJoin = "round";
-        this.ctx.stroke();
-      }
+        
+        if (figure.points.length > 0) {
+          this.ctx.strokeStyle = figure.points[0].clr;
+          this.ctx.lineWidth = figure.points[0].size;
+          this.ctx.moveTo(figure.points[0].x, figure.points[0].y);
+          this.ctx.lineTo(figure.points[0].x, figure.points[0].y);
+          this.ctx.stroke();
+        }
+
+        figure.points.forEach(point => {
+          this.ctx.lineTo(point.x, point.y);
+          this.ctx.moveTo(point.x, point.y);
+          this.ctx.strokeStyle = point.clr;
+          this.ctx.lineWidth = point.size;
+          this.ctx.stroke();
+        });
+
+        this.ctx.closePath();
+      });
     });
   }
 
-
-  drawingPath(event: any) {
+  drawingPath() {
     if (!this.drawingStatus) {
       return;
     }
@@ -92,11 +111,12 @@ export class DrawingService implements OnInit {
   startDrawing(event: any): void {
     this.drawingStatus = true;
     this.ctx.beginPath();
+    this.currentFigure = new Figure();
   }
 
   stopDrawing(event: any): void {
+    this.figures.push(this.currentFigure);
     this.drawingStatus = false;
-    this.ctx.save();
   }
 
   /**
@@ -118,14 +138,13 @@ export class DrawingService implements OnInit {
     }
     this.mouse.x = event.x;
     this.mouse.y = event.y;
-    // console.log("mouse", this.mouse);
 
-    this.drawingArray.push({
-      x: this.mouse.x,
-      y: this.mouse.y,
-      clr: this.selectedColor,
-      size: this.selectedSize,
-    });
+    this.currentFigure.add(
+      this.mouse.x,
+      this.mouse.y,
+      this.selectedColor,
+      this.selectedSize
+    );
   }
 
   getMouse(): void {
